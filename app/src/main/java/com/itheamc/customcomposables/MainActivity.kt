@@ -8,18 +8,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.itheamc.customcomposables.ui.grid.Grid
+import com.itheamc.customcomposables.ui.grid.GridCells
+import com.itheamc.customcomposables.ui.grid.GridDirection
+import com.itheamc.customcomposables.ui.grid.GridType
 import com.itheamc.customcomposables.ui.scaffold.FabPosition
 import com.itheamc.customcomposables.ui.scaffold.ResponsiveScaffold
-import com.itheamc.customcomposables.ui.staggeredgrid.GridCells
-import com.itheamc.customcomposables.ui.staggeredgrid.GridDirection
+import com.itheamc.customcomposables.ui.staggeredgrid.StaggeredGridCells
+import com.itheamc.customcomposables.ui.staggeredgrid.StaggeredGridDirection
 import com.itheamc.customcomposables.ui.staggeredgrid.StaggeredGrid
 import com.itheamc.customcomposables.ui.theme.CustomComposablesTheme
 import kotlin.random.Random
@@ -97,37 +98,58 @@ class MainActivity : ComponentActivity() {
 //                        isFloatingActionButtonDocked = true,
                         floatingActionButtonPosition = FabPosition.End,
                     ) {
-                        StaggeredGrid(
-                            modifier = Modifier.fillMaxSize().padding(it),
-                            gridDirection = GridDirection.Vertical,
-                            cells = GridCells.Adaptive(175.dp),
-//                            cells = GridCells.Fixed(3),
-                        ) {
-                            (1 until 51).forEach { n ->
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height((250 + (5 * n)).dp),
-                                    onClick = { /*TODO*/ },
-                                    shape = RoundedCornerShape(12.dp),
-                                    backgroundColor = Color(
-                                        red = Random.nextInt(256),
-                                        green = Random.nextInt(256),
-                                        blue = Random.nextInt(256),
-                                        alpha = 255
-                                    )
-                                ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(text = "This is cell $n")
-                                    }
-                                }
-                            }
-                        }
+//                        StaggeredGrid(
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                                .padding(it),
+//                            staggeredGridDirection = StaggeredGridDirection.Vertical,
+//                            cells = StaggeredGridCells.Adaptive(175.dp),
+//                        ) {
+//                            
+//                        }
+                        MyGrid(modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it))
                     }
 
+                }
+            }
+        }
+    }
+}
+
+
+@ExperimentalMaterialApi
+@Composable
+fun MyGrid(
+    modifier: Modifier
+) {
+    Grid(
+        modifier = modifier,
+        gridDirection = GridDirection.Vertical,
+        gridType = GridType.Staggered,
+        cells = GridCells.Adaptive(220.dp)
+//        cells = GridCells.Fixed(4)
+    ) {
+        (1 until 31).forEach { n ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height((Random.nextInt(250) + 50).dp),
+                onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(12.dp),
+                backgroundColor = Color(
+                    red = Random.nextInt(256),
+                    green = Random.nextInt(256),
+                    blue = Random.nextInt(256),
+                    alpha = 255
+                )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "This is cell $n")
                 }
             }
         }
