@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 fun StaggeredGrid(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
-    gridDirection: GridDirection = GridDirection.Vertical,
-    cells: GridCells = GridCells.Fixed(rowsOrCols = 2),
+    staggeredGridDirection: StaggeredGridDirection = StaggeredGridDirection.Vertical,
+    cells: StaggeredGridCells = StaggeredGridCells.Fixed(rowsOrCols = 2),
     gap: Dp = 12.dp,
     content: @Composable () -> Unit
 ) {
-    val newModifier = if (gridDirection == GridDirection.Vertical) {
+    val newModifier = if (staggeredGridDirection == StaggeredGridDirection.Vertical) {
         modifier.verticalScroll(
             state = scrollState
         )
@@ -33,7 +33,7 @@ fun StaggeredGrid(
 
     StaggeredGridLayout(
         modifier = newModifier,
-        gridDirection = gridDirection,
+        staggeredGridDirection = staggeredGridDirection,
         cells = cells,
         gap = gap,
         content = content
@@ -47,14 +47,14 @@ fun StaggeredGrid(
 @Composable
 private fun StaggeredGridLayout(
     modifier: Modifier = Modifier,
-    gridDirection: GridDirection,
-    cells: GridCells,
+    staggeredGridDirection: StaggeredGridDirection,
+    cells: StaggeredGridCells,
     gap: Dp,
     content: @Composable () -> Unit
 ) {
     val measurePolicy =
         rememberStaggeredGridMeasurePolicy(
-            gridDirection = gridDirection,
+            staggeredGridDirection = staggeredGridDirection,
             cells = cells,
             gap = gap
         )
@@ -71,12 +71,12 @@ private fun StaggeredGridLayout(
  */
 @Composable
 private fun rememberStaggeredGridMeasurePolicy(
-    gridDirection: GridDirection,
-    cells: GridCells,
+    staggeredGridDirection: StaggeredGridDirection,
+    cells: StaggeredGridCells,
     gap: Dp
 ) =
-    remember(gridDirection, cells, gap) {
-        if (gridDirection == GridDirection.Vertical) {
+    remember(staggeredGridDirection, cells, gap) {
+        if (staggeredGridDirection == StaggeredGridDirection.Vertical) {
             columnStaggeredGridMeasurePolicy(cells = cells, gap = gap)
         } else {
             rowStaggeredGridMeasurePolicy(cells = cells, gap = gap)
@@ -87,7 +87,7 @@ private fun rememberStaggeredGridMeasurePolicy(
 /**
  * Column Staggered Grid Measure Policy
  */
-internal fun columnStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
+internal fun columnStaggeredGridMeasurePolicy(cells: StaggeredGridCells, gap: Dp) =
     MeasurePolicy { measurables, constraints ->
         if (measurables.isEmpty()) {
             return@MeasurePolicy layout(
@@ -101,9 +101,9 @@ internal fun columnStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
 
         // Calculating number of columns
         val cols = when (cells) {
-            is GridCells.Fixed ->
+            is StaggeredGridCells.Fixed ->
                 if (cells.rowsOrCols <= 0) 2 else cells.rowsOrCols
-            is GridCells.Adaptive -> {
+            is StaggeredGridCells.Adaptive -> {
                 val c =
                     (((constraints.maxWidth) - pixelGap) / (cells.maxWidthOrHeight.toPx() + pixelGap)).toInt()
                 if (c <= 0) 1 else c
@@ -112,7 +112,7 @@ internal fun columnStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
 
         // Calculating item width
         val itemWidth = when (cells) {
-            is GridCells.Adaptive -> {
+            is StaggeredGridCells.Adaptive -> {
                 val cellWidth = cells.maxWidthOrHeight.toPx()
                 if (cellWidth.toInt() < constraints.maxWidth) {
                     val extraWidth = (constraints.maxWidth - pixelGap) % (cellWidth + pixelGap)
@@ -198,7 +198,7 @@ internal fun columnStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
  * --------------------------------------------------------------
  * Row Staggered Grid
  */
-internal fun rowStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
+internal fun rowStaggeredGridMeasurePolicy(cells: StaggeredGridCells, gap: Dp) =
     MeasurePolicy { measurables, constraints ->
         if (measurables.isEmpty()) {
             return@MeasurePolicy layout(
@@ -212,9 +212,9 @@ internal fun rowStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
 
         // Calculating the number of rows
         val rows = when (cells) {
-            is GridCells.Fixed ->
+            is StaggeredGridCells.Fixed ->
                 if (cells.rowsOrCols <= 0) 2 else cells.rowsOrCols
-            is GridCells.Adaptive -> {
+            is StaggeredGridCells.Adaptive -> {
                 val c =
                     (((constraints.maxHeight) - pixelGap) / (cells.maxWidthOrHeight.toPx() + pixelGap)).toInt()
                 if (c <= 0) 1 else c
@@ -223,7 +223,7 @@ internal fun rowStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
 
         // Calculating the item height
         val itemHeight = when (cells) {
-            is GridCells.Adaptive -> {
+            is StaggeredGridCells.Adaptive -> {
                 val cellHeight = cells.maxWidthOrHeight.toPx()
                 if (cellHeight.toInt() < constraints.maxHeight) {
                     val extraHeight = (constraints.maxHeight - pixelGap) % (cellHeight + pixelGap)
@@ -307,12 +307,12 @@ internal fun rowStaggeredGridMeasurePolicy(cells: GridCells, gap: Dp) =
 
 
 private data class Coordinate(val x: Int = 0, val y: Int = 0)
-enum class GridDirection {
+enum class StaggeredGridDirection {
     Horizontal,
     Vertical
 }
 
-sealed class GridCells {
-    class Fixed(val rowsOrCols: Int) : GridCells()
-    class Adaptive(val maxWidthOrHeight: Dp) : GridCells()
+sealed class StaggeredGridCells {
+    class Fixed(val rowsOrCols: Int) : StaggeredGridCells()
+    class Adaptive(val maxWidthOrHeight: Dp) : StaggeredGridCells()
 }
