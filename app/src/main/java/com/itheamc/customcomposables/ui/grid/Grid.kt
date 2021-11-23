@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Composable to place items in staggered grid
+ * Composable to place items in grid
  */
 @Composable
 fun Grid(
@@ -44,7 +44,7 @@ fun Grid(
 
 
 /**
- * Staggered Grid Layout Composable
+ * Grid Layout Composable
  */
 @Composable
 private fun GridLayout(
@@ -90,7 +90,7 @@ private fun rememberGridMeasurePolicy(
 
 
 /**
- * Column Staggered Grid Measure Policy
+ * Column Grid Measure Policy
  */
 internal fun columnGridMeasurePolicy(gridType: GridType, cells: GridCells, gap: Dp) =
     MeasurePolicy { measurables, constraints ->
@@ -216,7 +216,7 @@ internal fun columnGridMeasurePolicy(gridType: GridType, cells: GridCells, gap: 
 
 /**
  * --------------------------------------------------------------
- * Row Staggered Grid
+ * Row Grid Measure Policy
  */
 internal fun rowGridMeasurePolicy(gridType: GridType, cells: GridCells, gap: Dp) =
     MeasurePolicy { measurables, constraints ->
